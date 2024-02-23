@@ -29,6 +29,13 @@ function MyComponent() {
     load: () => {
       dispatch({type:"start_timer"});
       console.log("Map loaded");
+      const { _northEast, _southWest } = map.getBounds();
+      const { lat, lng } = _northEast;
+      const lat2 = _southWest.lat;
+      const lng2 = _southWest.lng;
+      // console.log(updateBBox({lat, lng, lat2, lng2}));
+      dispatch( updateBBox({lat, lng, lat2, lng2}) );
+      dispatch( fetchDataRequest() );
     }
   });
 
@@ -57,5 +64,6 @@ export const Map = () => {
       <WeatherMarker />
 
     </MapContainer>
+    
   );
 };

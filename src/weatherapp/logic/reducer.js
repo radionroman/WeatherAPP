@@ -8,6 +8,7 @@ const initialState = {
   bbox: BBOX,
   weatherData: WEATHER,
   userLocation: [51.5074, -0.1278],
+  darkMode: false,
 };
 
 function adjustCoordinates(longitude) {
@@ -47,6 +48,10 @@ const mapLogicSlice = createSlice({
       state.userLocation = [action.payload.coords.latitude, action.payload.coords.longitude]
       console.log("setUserLocation", state.userLocation);
     },
+    toggleMode: (state) => {
+      state.darkMode = !state.darkMode;
+    },
+
   }
 });
 
@@ -65,6 +70,6 @@ export const setUserLocationRequest = createAction(
   `${MAP_LOGIC_REDUCER_NAME}/setUserLocationRequest`
 );
 
-export const { fetchDataSuccess,updateBBox, setUserLocation } = mapLogicSlice.actions;
+export const { fetchDataSuccess,updateBBox, setUserLocation, toggleMode } = mapLogicSlice.actions;
 
 export const mapLogicReducer = mapLogicSlice.reducer;

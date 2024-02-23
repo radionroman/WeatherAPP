@@ -10,3 +10,5 @@ export const citiesSelector = createSelector(selectMapState, ({ overpassData }) 
 
 export const weatherSelector = createSelector(selectMapState, ({ weatherData }) => weatherData);
 
+export const modeSelector = createSelector(selectMapState, ({ darkMode }) => darkMode);
+

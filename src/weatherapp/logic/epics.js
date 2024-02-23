@@ -77,6 +77,7 @@ const fetchOverpassDataEpic = (action$, state$) =>
           });
           cities.sort((a, b) => b.population - a.population);
           cities = cities.slice(0, 20);
+          console.log("apikey", apikey);
 
           const cos2 =  cities.map((city) => {
               const url = `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${city.lat},${city.lon}&aqi=no`;
