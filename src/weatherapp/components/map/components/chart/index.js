@@ -5,7 +5,7 @@ import { weatherSelector } from '../../../../logic/selectors';
 export const Chart = () => {
 
     const weatherList = useSelector(weatherSelector);
-    console.log("WeatherList", weatherList);
+
 
 
     return (

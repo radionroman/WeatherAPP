@@ -29,7 +29,6 @@ var neutralIcon = L.icon({
 
 export const WeatherMarker = () => {
     const weatherList = useSelector(weatherSelector);
-    console.log("WeatherList", weatherList);
     let x = 0;
     return (
         <div>

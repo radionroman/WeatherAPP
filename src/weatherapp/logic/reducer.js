@@ -29,27 +29,25 @@ const mapLogicSlice = createSlice({
   initialState,
   reducers: {
     fetchDataSuccess: (state, action) => {  
-      console.log("fetchDataSuccess", action.payload);
-      
       state.weatherData = action.payload;
-
-
     },
     updateBBox: (state, { payload }) => {
-
       state.bbox._northEast.lat = adjustCoordinates(payload.lat);
       state.bbox._northEast.lng = adjustCoordinates(payload.lng);
       state.bbox._southWest.lat = adjustCoordinates(payload.lat2);
       state.bbox._southWest.lng = adjustCoordinates(payload.lng2);
-      console.log("updateBBox", payload);
     },
     setUserLocation: (state, action) => {
-      console.log("setUserLocation", action.payload.coords);
-      state.userLocation = [action.payload.coords.latitude, action.payload.coords.longitude]
-      console.log("setUserLocation", state.userLocation);
+      state.userLocation = [action.payload.coords.latitude, action.payload.coords.longitude];
     },
     toggleMode: (state) => {
       state.darkMode = !state.darkMode;
+    },
+    fetchWeatherError: (error) => {
+      console.error("Error fetching weather data", error);
+    },
+    fetchOverpassError: (error) => {
+      console.error("Error fetching overpass data", error);
     },
 
   }
@@ -70,6 +68,6 @@ export const setUserLocationRequest = createAction(
   `${MAP_LOGIC_REDUCER_NAME}/setUserLocationRequest`
 );
 
-export const { fetchDataSuccess,updateBBox, setUserLocation, toggleMode } = mapLogicSlice.actions;
+export const { fetchDataSuccess,updateBBox, setUserLocation, toggleMode, fetchWeatherError, fetchOverpassError } = mapLogicSlice.actions;
 
 export const mapLogicReducer = mapLogicSlice.reducer;
