@@ -1,7 +1,7 @@
 import { ofType, combineEpics } from "redux-observable";
 import { switchMap,mergeMap, map, catchError, take, tap  } from "rxjs/operators";
 import { from, Observable, scan, debounce, interval, forkJoin, of, combineLatest  } from "rxjs";
-import { overpassQuery, weatherQuery, parseWeatherData } from "./logic";
+import { overpassQuery, weatherQuery, parseWeatherData, parseOverpassData, applyFilters, combineCities } from "./logic";
 import {
   updateBBox,
   fetchDataRequest,
@@ -10,8 +10,10 @@ import {
   setUserLocation,
   fetchWeatherError,
   fetchOverpassError,
+  setCurrentCities,
 } from "./reducer";
-import { bboxSelector } from "./selectors";
+import { bboxSelector, weatherSelector } from "./selectors";
+import { useSelector } from "react-redux";
 
 
 
@@ -39,8 +41,17 @@ const fetchDataEpic = (action$, state$) =>
     ofType(fetchDataRequest.type),
     debounce(() => interval(1000)),
     map(() => ({bbox: bboxSelector(state$.value)})),
-    switchMap( ({bbox}) => from(overpassQuery(bbox)).pipe(
-      switchMap((response1) => forkJoin(weatherQuery(response1, state$)).pipe(
+    switchMap( ({bbox}) =>
+      from(overpassQuery(bbox)).pipe(
+      map((response) => ({citiesInBBox: parseOverpassData(response)})),
+      map(({citiesInBBox}) => ({citiesFiltered: applyFilters(citiesInBBox,)})),
+      map(({citiesFiltered}) => ({
+        newCities: citiesFiltered, 
+        oldCities: weatherSelector(state$.value)
+        })),
+      map(({newCities, oldCities}) => ({citiesToQuery: combineCities(newCities, oldCities)})),
+      switchMap(({citiesToQuery}) => 
+      forkJoin(citiesToQuery.map(city => weatherQuery(city).then( response => ({...city, ...response}) ) ) ).pipe(
         map((response) => ({cities: parseWeatherData(response)})),
         map(({cities}) => fetchDataSuccess(cities)),  
         catchError((error) => {
@@ -63,7 +74,6 @@ const setUserLocationEpic = (action$) =>
         switchMap(() => 
             from(getUserLocation()).pipe(
                 map(location => {
-                  console.log("Location", location);
                   return setUserLocation(location);
                 })
             )

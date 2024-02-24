@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createEpicMiddleware } from "redux-observable";
 
-
 import {
   MAP_LOGIC_REDUCER_NAME,
   mapLogicReducer,

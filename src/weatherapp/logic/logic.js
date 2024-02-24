@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
 
 const apikey = process.env.REACT_APP_WEATHER_API_KEY;
@@ -22,16 +20,21 @@ const api = axios.create({
                 );
                 out;
       `;
-      // Construct the URL for Overpass API
-      // Use Axios to make the POST request
-
       return api.post('/api/interpreter',`${overpassQuery}`)
 }
 
-export const weatherQuery = (response, state$) => {
-    const  payload  = response.data;
-    const { elements } = payload;
-    var cities = elements.map((element) => {
+export const weatherQuery = (city) => {
+    const url = `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${city.lat},${city.lon}&aqi=no`;
+    return axios.get(url).then((response) => {
+
+        return response;
+    });
+}
+
+export const parseOverpassData = (response) => {
+
+    const { elements } = response.data;
+    return elements.map((element) => {
         const { tags, lat, lon } = element;
         return {
             name:  tags.name || "Unknown",
@@ -40,25 +43,32 @@ export const weatherQuery = (response, state$) => {
             lon,
         };
     });
+}
+
+export const applyFilters = (cities, filters) => {
     cities.sort((a, b) => b.population - a.population);
+    // if (filters.name !== "") {
+    //     cities = cities.filter((city) => city.name.toLowerCase().includes(filters.name.toLowerCase()));
+    // }
     cities = cities.slice(0, 20);
-    const cos2 =  cities.map((city) => {
-        const url = `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${city.lat},${city.lon}&aqi=no`;
-        if ( state$.value.mapLogic.weatherData.find(city1 => city1.name === city.name) === undefined) {
-            console.log("City not found", city.name);
-            return from(axios.get(url));
+    return cities;
+}
+
+export const combineCities = (newCities, oldCities) => {
+    var citiesToQuery = []; 
+    newCities.forEach((city) => {
+        if (oldCities.find((element) => element.name === city.name) === undefined) {
+            citiesToQuery.push(city);
         }
     });
-    console.log("cos2", cos2);
-    return cos2.filter(element => element !== undefined);
+    return citiesToQuery;
 }
 
 export const parseWeatherData = (response) => {
     return response.map((element) => {
-        console.log("Element", element);
         const { data } = element;
         const { location, current } = data;
-        const { name, lat, lon } = location;
+        const { lat, lon } = location;
         const { temp_c, precip_mm, pressure_mb, condition } = current;
         const pressure_smaller = pressure_mb / 100;
         const { icon } = condition;
@@ -75,9 +85,8 @@ export const parseWeatherData = (response) => {
         if (x === 2) {
             type = "GOOD";
         }
-
         return {
-            name,
+            name: element.name,
             lat,
             lon,
             temp_c,

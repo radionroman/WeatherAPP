@@ -1,4 +1,4 @@
-import { Map, Chart, MapWrapper, darkTheme, lightTheme, ChartWrapper } from "./components";
+import { Map, Chart, MapWrapper, darkTheme, lightTheme, ChartWrapper, FormComponent} from "./components";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleMode } from "./logic/reducer";
 import { modeSelector } from "./logic/selectors";
@@ -36,7 +36,10 @@ export const WeatherApp = () => {
                 <Chart />
                 </ChartWrapper>
             </Container>
+            {/* <FormComponent /> */}
+            
         </ThemeProvider>
+
         
     );
 }

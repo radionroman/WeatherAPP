@@ -29,9 +29,7 @@ var neutralIcon = L.icon({
 
 export const WeatherMarker = () => {
     const weatherList = useSelector(weatherSelector);
-    console.log("WeatherList", weatherList);
     let x = 0;
-    
     return (
         <div>
             {weatherList.map((city) => {
@@ -39,7 +37,7 @@ export const WeatherMarker = () => {
                 if (city.type === "GOOD") cityIcon = happyIcon;
                 if (city.type === "PASSABLE") cityIcon = neutralIcon;
                     return (
-                        <Marker position={[city.lat, city.lon]} icon={cityIcon}>
+                        <Marker position={[city.lat, city.lon]} icon={cityIcon} key={city.name}>
                             <Popup>
                                 <div>
                                     <h2>{city.name}</h2>
@@ -56,19 +54,4 @@ export const WeatherMarker = () => {
         </div>
     );
 
-
-    // return ({weatherList.map((city) => {
-    //     return (
-    //         <Marker position={[city.coord.lat, city.coord.lon]}>
-    //             <Popup>
-    //                         <div>
-    //                             <h2>{city.name}</h2>
-    //                             <p>Temperature: {city.temp_c}</p>
-    //                         </div>
-    //                     </Popup>
-    //                 </Marker>
-    //             );
-    //         })
-    //     }
-    // )
 }

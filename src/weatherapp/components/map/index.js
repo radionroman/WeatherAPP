@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { updateBBox, fetchDataRequest, setUserLocation, setUserLocationRequest } from "../../logic/reducer";
 import { WeatherMarker } from "./components"
 import { useSelector } from "react-redux";
-export { Chart, ChartWrapper } from "./components"
+export { Chart, ChartWrapper, FormComponent  } from "./components"
 
 function MyComponent() {
   const dispatch = useDispatch();

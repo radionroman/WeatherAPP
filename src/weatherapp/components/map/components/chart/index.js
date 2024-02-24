@@ -8,14 +8,10 @@ export const Chart = () => {
 
     const weatherList = useSelector(weatherSelector);
 
-    console.log(weatherList);
-
-
-
     return (
         <div style={{ width: '100%', height: '85vh' }}>
-        <ResponsiveContainer width="100%" height="70%" >
-        <BarChart  data={weatherList} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+        <ResponsiveContainer width="100%" height="85%" >
+        <BarChart  data={weatherList} margin={{ top: 20, right: 30, left: 20, bottom: 130 }}>
         <Legend verticalAlign='top' height={30} />
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" angle={-90} textAnchor="end" interval={0} />
