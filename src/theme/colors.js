@@ -1,6 +1,6 @@
 import { PLAYERS } from '../game/game-logic/const';
 
-export const colors = {
+export const lightColors = {
     background: '#FFFFFF',
     text: '#000000',
     border: '#999999',
@@ -14,4 +14,10 @@ export const colors = {
     board: {
         hoverBackground: '#dddddd'
     }
+};
+
+export const darkColors = {
+    background: '#000000',
+    text: '#FFFFFF',
+    border: '#666666',
 };

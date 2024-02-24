@@ -29,57 +29,28 @@ var neutralIcon = L.icon({
 
 export const WeatherMarker = () => {
     const weatherList = useSelector(weatherSelector);
+    console.log("WeatherList", weatherList);
     let x = 0;
+    
     return (
         <div>
             {weatherList.map((city) => {
-                x = 0;
-                if (city.temp_c > 18 && city.temp_c < 25) x++;
-                if (city.precip_mm === 0) x++;
-                if (x === 0) {
+                var cityIcon = sadIcon;
+                if (city.type === "GOOD") cityIcon = happyIcon;
+                if (city.type === "PASSABLE") cityIcon = neutralIcon;
                     return (
-                        <Marker position={[city.lat, city.lon]} icon={sadIcon}>
+                        <Marker position={[city.lat, city.lon]} icon={cityIcon}>
                             <Popup>
                                 <div>
                                     <h2>{city.name}</h2>
                                     <p>Temperature: {city.temp_c}</p>
                                     <p>Precipitation: {city.precip_mm}</p>
-                                    <p>TYPE: BAD</p>
+                                    <p>TYPE: {city.type}</p>
                                 </div>
                             </Popup>
                         </Marker>
                     );
-                    
-                }
-                if (x === 1) {
-                    return (
-                        <Marker position={[city.lat, city.lon]} icon={neutralIcon}>
-                            <Popup>
-                                <div>
-                                    <h2>{city.name}</h2>
-                                    <p>Temperature: {city.temp_c}</p>
-                                    <p>Precipitation: {city.precip_mm}</p>
-                                    <p>TYPE: PASSABLE</p>
-                                </div>
-                            </Popup>
-                        </Marker>
-                    );
-                }
-                if (x === 2) {
-                    return (
-                        <Marker position={[city.lat, city.lon]} icon={happyIcon}>
-                            <Popup>
-                                <div>
-                                    <h2>{city.name}</h2>
-                                    <p>Temperature: {city.temp_c}</p>
-                                    <p>Precipitation: {city.precip_mm}</p>
-                                    <p>TYPE: GOOD</p>
-                                </div>
-                            </Popup>
-                        </Marker>
-                    );
-                }
-                
+    
  
             })}
         </div>

@@ -55,16 +55,36 @@ export const weatherQuery = (response, state$) => {
 
 export const parseWeatherData = (response) => {
     return response.map((element) => {
+        console.log("Element", element);
         const { data } = element;
         const { location, current } = data;
         const { name, lat, lon } = location;
-        const { temp_c, precip_mm } = current;
+        const { temp_c, precip_mm, pressure_mb, condition } = current;
+        const pressure_smaller = pressure_mb / 100;
+        const { icon } = condition;
+        let x = 0;
+        var type;
+        if (temp_c > 18 && temp_c < 25) x++;
+        if (precip_mm === 0) x++;
+        if (x === 0) {
+            type = "BAD";
+        }
+        if (x === 1) {
+            type = "PASSABLE";
+        }
+        if (x === 2) {
+            type = "GOOD";
+        }
+
         return {
             name,
             lat,
             lon,
             temp_c,
             precip_mm,
+            pressure: pressure_mb - 1000,
+            icon,
+            type: type,
         };
     });
 }

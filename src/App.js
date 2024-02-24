@@ -1,5 +1,5 @@
 import { ThemeProvider } from "styled-components";
-import { theme } from "./theme";
+import { darkTheme, lightTheme } from "./theme";
 import { GlobalStyle } from "./global-styles";
 import { WeatherApp } from "./weatherapp";
 import { modeSelector } from "./weatherapp/logic/selectors";
@@ -10,7 +10,7 @@ export const App = () => {
   const darkMode = useSelector(modeSelector);
   
   return (
-    <ThemeProvider theme={darkMode ? theme : theme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <GlobalStyle />
       <WeatherApp />
     </ThemeProvider>

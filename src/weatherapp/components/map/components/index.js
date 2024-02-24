@@ -1,2 +1,2 @@
 export { WeatherMarker } from "./marker"
-export { Chart } from "./chart"
+export { Chart, ChartWrapper } from "./chart"

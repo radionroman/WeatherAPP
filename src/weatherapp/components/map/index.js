@@ -2,14 +2,9 @@ import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useDispatch } from "react-redux";
 import { updateBBox, fetchDataRequest, setUserLocation, setUserLocationRequest } from "../../logic/reducer";
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import L from 'leaflet';
 import { WeatherMarker } from "./components"
 import { useSelector } from "react-redux";
-export { Chart } from "./components"
-
-
+export { Chart, ChartWrapper } from "./components"
 
 function MyComponent() {
   const dispatch = useDispatch();

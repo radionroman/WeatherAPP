@@ -12,9 +12,14 @@ export const GlobalStyle = createGlobalStyle`
         
          font-size: ${({ theme }) => theme.fonts.basic.fontSize};
          font-family: ${({ theme }) => theme.fonts.basic.fontFamily};
+
+         transition: background-color 0.5s, color 0.5s;
+
     }
 
     body {
          margin: ${({ theme }) => theme.dims.bigSpacing};
+
+         transition: margin 0.5s;
     }
 `;
