@@ -52,13 +52,12 @@ export const FormComponent = () => {
         </div>
         <RangeSlider
           min={0}
-          max={15000000}
-          values={populationRange}
+          max={20000000}
+          value={populationRange}
           onInput={handleInputChangeSlider}
           step={1000}
         />
       </div>
-      <button type="submit">Submit</button>
     </form>
   );
 };

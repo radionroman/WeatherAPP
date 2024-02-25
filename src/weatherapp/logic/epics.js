@@ -1,23 +1,19 @@
 import { ofType, combineEpics } from "redux-observable";
-import { switchMap,mergeMap, map, catchError, take, tap  } from "rxjs/operators";
-import { from, Observable, scan, debounce, interval, forkJoin, of, combineLatest  } from "rxjs";
+import { switchMap,mergeMap, map, catchError } from "rxjs/operators";
+import { from, debounce, interval, forkJoin, of } from "rxjs";
 import { overpassQuery, weatherQuery, parseWeatherData, parseOverpassData, applyFilters, combineCities } from "./logic";
 import {
-  updateBBox,
   fetchDataRequest,
   fetchDataSuccess,
   setUserLocationRequest,
   setUserLocation,
   fetchWeatherError,
   fetchOverpassError,
-  setCurrentCities,
   deleteCities,
   setIsLoadingRequest,
   setIsLoading,
 } from "./reducer";
 import { bboxSelector, weatherSelector, currentCitiesSelector, filtersSelector } from "./selectors";
-import { useSelector } from "react-redux";
-
 
 
 

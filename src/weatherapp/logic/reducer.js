@@ -11,7 +11,7 @@ const initialState = {
   darkMode: false,
   filters: {
     min_population: 0,
-    max_population: 1000000000,
+    max_population: 200000000,
     name: "",
   },
   currentCities: [],
@@ -53,13 +53,11 @@ const mapLogicSlice = createSlice({
           data.push(newCity);
         }
       });
-      console.log("Data", data);
       state.weatherData = data;
       state.isLoading = false;
     },
     deleteCities: (state, action) => {
       const data = action.payload;
-      console.log("Data", data);
       state.isLoading = false;
       state.weatherData = state.weatherData.filter((city) => data.find((element) => element.name === city.name) != undefined);
     },  
@@ -70,7 +68,9 @@ const mapLogicSlice = createSlice({
       state.bbox._southWest.lng = adjustCoordinates(payload.lng2);
     },
     setUserLocation: (state, action) => {
-      state.userLocation = [action.payload.coords.latitude, action.payload.coords.longitude];
+      state.userLocation = [action.payload.latlng.lat, action.payload.latlng.lng];
+
+
     },
     toggleMode: (state) => {
       state.darkMode = !state.darkMode;
@@ -80,10 +80,6 @@ const mapLogicSlice = createSlice({
     },
     fetchOverpassError: (error) => {
       console.error("Error fetching overpass data", error);
-    },
-    setCurrentCities: (state, action) => {
-      state.currentCities = action.payload;
-      console.log("Current Cities", state.currentCities);
     },
 
     setFilters: (state, action) => {
@@ -115,6 +111,6 @@ export const setIsLoadingRequest = createAction(
   `${MAP_LOGIC_REDUCER_NAME}/setIsLoadingRequest`
 );
 
-export const { setIsLoading,deleteCities, setCurrentCities,fetchDataSuccess,updateBBox, setUserLocation, toggleMode, fetchWeatherError, fetchOverpassError, setFilters } = mapLogicSlice.actions;
+export const { setIsLoading,deleteCities,fetchDataSuccess,updateBBox, setUserLocation, toggleMode, fetchWeatherError, fetchOverpassError, setFilters } = mapLogicSlice.actions;
 
 export const mapLogicReducer = mapLogicSlice.reducer;
