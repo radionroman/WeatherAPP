@@ -34,6 +34,7 @@ export const weatherQuery = (city) => {
 export const parseOverpassData = (response) => {
 
     const { elements } = response.data;
+    console.log("Elements", elements);
     return elements.map((element) => {
         const { tags, lat, lon } = element;
         return {
@@ -47,9 +48,11 @@ export const parseOverpassData = (response) => {
 
 export const applyFilters = (cities, filters) => {
     cities.sort((a, b) => b.population - a.population);
-    // if (filters.name !== "") {
-    //     cities = cities.filter((city) => city.name.toLowerCase().includes(filters.name.toLowerCase()));
-    // }
+    console.log("FIlters", filters);
+    if (filters.name !== "" && filters.name !== undefined) {
+        cities = cities.filter((city) => city.name.toLowerCase().includes(filters.name.toLowerCase()));
+    }
+    cities = cities.filter((city) => city.population >= filters.min_population && city.population <= filters.max_population);
     cities = cities.slice(0, 20);
     return cities;
 }
@@ -65,6 +68,7 @@ export const combineCities = (newCities, oldCities) => {
 }
 
 export const parseWeatherData = (response) => {
+    console.log("Response", response);
     return response.map((element) => {
         const { data } = element;
         const { location, current } = data;

@@ -11,8 +11,9 @@ import {
   fetchWeatherError,
   fetchOverpassError,
   setCurrentCities,
+  deleteCities,
 } from "./reducer";
-import { bboxSelector, weatherSelector } from "./selectors";
+import { bboxSelector, weatherSelector, currentCitiesSelector, filtersSelector } from "./selectors";
 import { useSelector } from "react-redux";
 
 
@@ -44,21 +45,27 @@ const fetchDataEpic = (action$, state$) =>
     switchMap( ({bbox}) =>
       from(overpassQuery(bbox)).pipe(
       map((response) => ({citiesInBBox: parseOverpassData(response)})),
-      map(({citiesInBBox}) => ({citiesFiltered: applyFilters(citiesInBBox,)})),
+      map(({citiesInBBox}) => ({citiesFiltered: applyFilters(citiesInBBox, filtersSelector(state$.value))})),
       map(({citiesFiltered}) => ({
         newCities: citiesFiltered, 
         oldCities: weatherSelector(state$.value)
         })),
-      map(({newCities, oldCities}) => ({citiesToQuery: combineCities(newCities, oldCities)})),
-      switchMap(({citiesToQuery}) => 
-      forkJoin(citiesToQuery.map(city => weatherQuery(city).then( response => ({...city, ...response}) ) ) ).pipe(
-        map((response) => ({cities: parseWeatherData(response)})),
-        map(({cities}) => fetchDataSuccess(cities)),  
+      map(({newCities, oldCities}) => ({newCities: newCities ,citiesToQuery: combineCities(newCities, oldCities), })),
+      switchMap(({newCities, citiesToQuery,}) =>{ 
+        if (citiesToQuery.length === 0) {
+          return of(deleteCities(newCities));
+        }
+      return forkJoin(citiesToQuery.map(city => weatherQuery(city).then( response => ({...city, ...response}) ) ) ).pipe(
+
+        map((response) => ({cities: parseWeatherData(response), newCities: newCities})),
+        map(({cities, newCities}) => fetchDataSuccess( {newCities, cities})),  
         catchError((error) => {
           console.error("Weather API Error:", error);
           return fetchWeatherError(error);
         }),
-      )),
+      )
+      }
+      ),
       catchError((error) => {
         console.error("Overpass API Error:", error);
         return fetchOverpassError(error);

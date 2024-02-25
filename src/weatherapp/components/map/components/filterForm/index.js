@@ -1,60 +1,61 @@
-
-import { setFilters } from '../../../../logic/reducer' // Assuming you have an action creator
-// Import necessary dependencies
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Slider from 'react-slider';
-const RangeSlider = ({ min, max, onRangeChange }) => {
-    const rangeValues = [min,max];
-  
-    return (
-      <div>
-        <label>
-          Lower Bound:
-          <span>{rangeValues[0]}</span>
-        </label>
-        <Slider
-          min={min}
-          max={max}
-          step={1}
-          value={rangeValues}
-         
-        />
-        <label>
-          Upper Bound:
-          <span>{rangeValues[1]}</span>
-        </label>
-      </div>
-    );
-  };
-  
-// FormComponent.jsx
+import { setFilters, fetchDataRequest } from '../../../../logic/reducer';
+import RangeSlider from 'react-range-slider-input';
+import 'react-range-slider-input/dist/style.css';
+import { filtersSelector } from '../../../../logic/selectors';
+
 export const FormComponent = () => {
-  // Retrieve form data from Redux state
-  // Redux dispatch function
   const dispatch = useDispatch();
 
+  // Using useSelector to get values from the Redux store
+  const filters = useSelector(filtersSelector);
+  const { min_population, max_population } = filters;
+  const name = filters.name;
+  const populationRange = [min_population, max_population];
 
-    // Optionally, you can reset the form data in the Redux store
-    // dispatch(resetFormData()); // Assuming you have a reset action creator
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    dispatch(setFilters({ name: newValue, min_population, max_population}));
+    dispatch(fetchDataRequest());
+  };
 
+  const handleInputChangeSlider = (newPopulationRange) => {
+    dispatch(setFilters({
+      name,
+      min_population: newPopulationRange[0],
+      max_population: newPopulationRange[1],
+    }));
+    dispatch(fetchDataRequest());
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(fetchDataRequest());
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label>
         Form Data:
         <input
           type="text"
-          
-          onChange={(e) => dispatch(setFilters({name:e.target.value}))}
+          onChange={handleInputChange}
         />
-
-      <RangeSlider min={0} max={100} onRangeChange={null} />
       </label>
+      <div>
+        <div>
+          Current Range: {populationRange[0]} - {populationRange[1]}
+        </div>
+        <RangeSlider
+          min={0}
+          max={15000000}
+          values={populationRange}
+          onInput={handleInputChangeSlider}
+          step={1000}
+        />
+      </div>
       <button type="submit">Submit</button>
     </form>
   );
 };
-
-
-

@@ -16,7 +16,7 @@ function MyComponent() {
       const { lat, lng } = _northEast;
       const lat2 = _southWest.lat;
       const lng2 = _southWest.lng;
-      // console.log(updateBBox({lat, lng, lat2, lng2}));
+      console.log(updateBBox({lat, lng, lat2, lng2}));
       dispatch( updateBBox({lat, lng, lat2, lng2}) );
       dispatch( fetchDataRequest() );
       
@@ -40,7 +40,7 @@ function MyComponent() {
 export const Map = () => {
   const dispatch = useDispatch();
   const userLocation = useSelector(state => state.mapLogic.userLocation);
-
+  
   return (
     <MapContainer
       key={userLocation[0] + userLocation[1]}

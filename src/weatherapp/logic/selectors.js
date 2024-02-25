@@ -12,3 +12,6 @@ export const weatherSelector = createSelector(selectMapState, ({ weatherData }) 
 
 export const modeSelector = createSelector(selectMapState, ({ darkMode }) => darkMode);
 
+export const currentCitiesSelector = createSelector(selectMapState, ({ currentCities }) => currentCities);
+
+export const filtersSelector = createSelector(selectMapState, ({ filters }) => filters);

@@ -36,7 +36,7 @@ export const WeatherApp = () => {
                 <Chart />
                 </ChartWrapper>
             </Container>
-            {/* <FormComponent /> */}
+            <FormComponent />
             
         </ThemeProvider>
 
