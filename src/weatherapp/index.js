@@ -1,7 +1,7 @@
 import { Map, Chart, MapWrapper, darkTheme, lightTheme, ChartWrapper, FormComponent} from "./components";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleMode } from "./logic/reducer";
-import { modeSelector } from "./logic/selectors";
+import { modeSelector, isLoadingSelector} from "./logic/selectors";
 import styled, { ThemeProvider } from "styled-components";
 
 const Container = styled.div`
@@ -15,6 +15,7 @@ const Box = styled.div`
 `;
 export const WeatherApp = () => {
     const darkMode = useSelector(modeSelector);
+    const isLoading = useSelector(isLoadingSelector);
     const dispatch = useDispatch();
 
     return (
@@ -25,15 +26,18 @@ export const WeatherApp = () => {
             <button onClick={() => dispatch(toggleMode())}>
                 {darkMode ? "Light mode" : "Dark mode"}
             </button>
+            
+            
             <Container>
                 
                 <MapWrapper>
                     <Map />
                 </MapWrapper>
                 
-                
+                {isLoading && <h2>Loading...</h2>}
                 <ChartWrapper>
                 <Chart />
+                
                 </ChartWrapper>
             </Container>
             <FormComponent />

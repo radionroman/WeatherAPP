@@ -15,6 +15,7 @@ const initialState = {
     name: "",
   },
   currentCities: [],
+  isLoading: false,
 };
 
 function adjustCoordinates(longitude) {
@@ -34,6 +35,10 @@ const mapLogicSlice = createSlice({
   name: MAP_LOGIC_REDUCER_NAME,
   initialState,
   reducers: {
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+
     fetchDataSuccess: (state, action) => { 
       var currentCities = action.payload.newCities;
       var newWeatherData = action.payload.cities;
@@ -50,11 +55,12 @@ const mapLogicSlice = createSlice({
       });
       console.log("Data", data);
       state.weatherData = data;
+      state.isLoading = false;
     },
     deleteCities: (state, action) => {
       const data = action.payload;
       console.log("Data", data);
-      
+      state.isLoading = false;
       state.weatherData = state.weatherData.filter((city) => data.find((element) => element.name === city.name) != undefined);
     },  
     updateBBox: (state, { payload }) => {
@@ -105,6 +111,10 @@ export const setUserLocationRequest = createAction(
   `${MAP_LOGIC_REDUCER_NAME}/setUserLocationRequest`
 );
 
-export const { deleteCities, setCurrentCities,fetchDataSuccess,updateBBox, setUserLocation, toggleMode, fetchWeatherError, fetchOverpassError, setFilters } = mapLogicSlice.actions;
+export const setIsLoadingRequest = createAction(
+  `${MAP_LOGIC_REDUCER_NAME}/setIsLoadingRequest`
+);
+
+export const { setIsLoading,deleteCities, setCurrentCities,fetchDataSuccess,updateBBox, setUserLocation, toggleMode, fetchWeatherError, fetchOverpassError, setFilters } = mapLogicSlice.actions;
 
 export const mapLogicReducer = mapLogicSlice.reducer;

@@ -15,3 +15,5 @@ export const modeSelector = createSelector(selectMapState, ({ darkMode }) => dar
 export const currentCitiesSelector = createSelector(selectMapState, ({ currentCities }) => currentCities);
 
 export const filtersSelector = createSelector(selectMapState, ({ filters }) => filters);
+
+export const isLoadingSelector = createSelector(selectMapState, ({ isLoading }) => isLoading);

@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useDispatch } from "react-redux";
-import { updateBBox, fetchDataRequest, setUserLocation, setUserLocationRequest } from "../../logic/reducer";
+import { updateBBox, fetchDataRequest, setUserLocation, setUserLocationRequest, setIsLoading } from "../../logic/reducer";
 import { WeatherMarker } from "./components"
 import { useSelector } from "react-redux";
 export { Chart, ChartWrapper, FormComponent  } from "./components"
@@ -18,6 +18,7 @@ function MyComponent() {
       const lng2 = _southWest.lng;
       console.log(updateBBox({lat, lng, lat2, lng2}));
       dispatch( updateBBox({lat, lng, lat2, lng2}) );
+      dispatch(setIsLoading(true));
       dispatch( fetchDataRequest() );
       
     },
@@ -30,6 +31,7 @@ function MyComponent() {
       const lng2 = _southWest.lng;
       // console.log(updateBBox({lat, lng, lat2, lng2}));
       dispatch( updateBBox({lat, lng, lat2, lng2}) );
+      dispatch(setIsLoading(true));
       dispatch( fetchDataRequest() );
     }
   });

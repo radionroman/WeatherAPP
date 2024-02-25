@@ -12,6 +12,8 @@ import {
   fetchOverpassError,
   setCurrentCities,
   deleteCities,
+  setIsLoadingRequest,
+  setIsLoading,
 } from "./reducer";
 import { bboxSelector, weatherSelector, currentCitiesSelector, filtersSelector } from "./selectors";
 import { useSelector } from "react-redux";
@@ -35,7 +37,12 @@ const startTimerEpic = (action$, state$) =>
     )
   );
 
-
+const setIsLoadingEpic = (action$, state$) =>
+  action$.pipe(
+    ofType(setIsLoadingRequest.type),
+    debounce(() => interval(1000)),
+    map(() => setIsLoading(true)),
+  );
 
 const fetchDataEpic = (action$, state$) =>
   action$.pipe(
@@ -91,4 +98,4 @@ const setUserLocationEpic = (action$) =>
  
 
 
-export const mapEpics = combineEpics(fetchDataEpic, setUserLocationEpic, createRegularActionEpic, startTimerEpic);
+export const mapEpics = combineEpics(setIsLoadingEpic,fetchDataEpic, setUserLocationEpic, createRegularActionEpic, startTimerEpic);

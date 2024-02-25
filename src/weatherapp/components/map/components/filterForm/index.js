@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilters, fetchDataRequest } from '../../../../logic/reducer';
+import { setFilters, fetchDataRequest, setIsLoadingRequest } from '../../../../logic/reducer';
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 import { filtersSelector } from '../../../../logic/selectors';
@@ -17,6 +17,7 @@ export const FormComponent = () => {
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     dispatch(setFilters({ name: newValue, min_population, max_population}));
+    dispatch(setIsLoadingRequest(true));
     dispatch(fetchDataRequest());
   };
 
@@ -26,11 +27,13 @@ export const FormComponent = () => {
       min_population: newPopulationRange[0],
       max_population: newPopulationRange[1],
     }));
+    dispatch(setIsLoadingRequest(true));
     dispatch(fetchDataRequest());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(setIsLoadingRequest(true));
     dispatch(fetchDataRequest());
   };
 
