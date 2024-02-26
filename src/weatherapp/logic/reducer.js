@@ -1,34 +1,22 @@
 import { createSlice, createAction} from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import { BBOX, CITIES, WEATHER } from "./const";
+import { BBOX, WEATHER, FILTERS, USERLOCATION } from "./const";
+import { adjustCoordinates } from "./logic";
+
 
 export const MAP_LOGIC_REDUCER_NAME = "mapLogic";
 
 const initialState = {
   bbox: BBOX,
   weatherData: WEATHER,
-  userLocation: [51.5074, -0.1278],
+  userLocation: USERLOCATION,
+  locationIsSet: false,
   darkMode: false,
-  filters: {
-    min_population: 0,
-    max_population: 200000000,
-    name: "",
-  },
-  currentCities: [],
+  filters: FILTERS,
   isLoading: false,
 };
 
-function adjustCoordinates(longitude) {
-  while (longitude > 180) {
 
-      longitude -= 360;
-  }
-  while (longitude < -180) {
-
-      longitude += 360;
-  }
-  return longitude;
-}
 
 
 const mapLogicSlice = createSlice({
@@ -40,7 +28,7 @@ const mapLogicSlice = createSlice({
     },
 
     fetchDataSuccess: (state, action) => { 
-      var currentCities = action.payload.newCities;
+      var currentCities = action.payload.citiesInBBox;
       var newWeatherData = action.payload.cities;
       var oldWeatherData = state.weatherData;
       var data = [];
@@ -53,6 +41,8 @@ const mapLogicSlice = createSlice({
           data.push(newCity);
         }
       });
+      console.log("New loaded cities:", newWeatherData);
+      console.log("Current cities data:", data);
       state.weatherData = data;
       state.isLoading = false;
     },
@@ -68,8 +58,8 @@ const mapLogicSlice = createSlice({
       state.bbox._southWest.lng = adjustCoordinates(payload.lng2);
     },
     setUserLocation: (state, action) => {
-      state.userLocation = [action.payload.latlng.lat, action.payload.latlng.lng];
-
+      state.userLocation = [action.payload.lat, action.payload.lng];
+      state.locationIsSet = true;
 
     },
     toggleMode: (state) => {
@@ -101,10 +91,6 @@ export const fetchOverpassDataRequest = createAction(
 
 export const fetchDataRequest = createAction(
   `${MAP_LOGIC_REDUCER_NAME}/fetchDataRequest`
-);
-
-export const setUserLocationRequest = createAction(
-  `${MAP_LOGIC_REDUCER_NAME}/setUserLocationRequest`
 );
 
 export const setIsLoadingRequest = createAction(

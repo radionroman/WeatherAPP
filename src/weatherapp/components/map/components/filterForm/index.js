@@ -4,6 +4,9 @@ import { setFilters, fetchDataRequest, setIsLoadingRequest } from '../../../../l
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 import { filtersSelector } from '../../../../logic/selectors';
+import styled from 'styled-components';
+
+
 
 export const FormComponent = () => {
   const dispatch = useDispatch();

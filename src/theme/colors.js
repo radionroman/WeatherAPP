@@ -5,19 +5,19 @@ export const lightColors = {
     text: '#000000',
     border: '#999999',
 
-    players: {
-        [PLAYERS.X]: '#FFB135',
-        [PLAYERS.O]: '#3583ff',
-        [PLAYERS.UNKNOWN]: '#5b5b5b'
+    slider: {
+        track: '#999999',
+        thumb: '#666666',
     },
 
-    board: {
-        hoverBackground: '#dddddd'
-    }
 };
 
 export const darkColors = {
     background: '#000000',
     text: '#FFFFFF',
     border: '#666666',
+    slider: {
+        track: '#666666',
+        thumb: '#999999',
+    },
 };

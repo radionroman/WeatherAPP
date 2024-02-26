@@ -13,7 +13,7 @@ import {
   setIsLoadingRequest,
   setIsLoading,
 } from "./reducer";
-import { bboxSelector, weatherSelector, currentCitiesSelector, filtersSelector } from "./selectors";
+import { bboxSelector, weatherSelector, filtersSelector } from "./selectors";
 
 
 
@@ -50,18 +50,18 @@ const fetchDataEpic = (action$, state$) =>
       map((response) => ({citiesInBBox: parseOverpassData(response)})),
       map(({citiesInBBox}) => ({citiesFiltered: applyFilters(citiesInBBox, filtersSelector(state$.value))})),
       map(({citiesFiltered}) => ({
-        newCities: citiesFiltered, 
+        citiesInBBox: citiesFiltered, 
         oldCities: weatherSelector(state$.value)
         })),
-      map(({newCities, oldCities}) => ({newCities: newCities ,citiesToQuery: combineCities(newCities, oldCities), })),
-      switchMap(({newCities, citiesToQuery,}) =>{ 
+      map(({citiesInBBox, oldCities}) => ({citiesInBBox,citiesToQuery: combineCities(citiesInBBox, oldCities), })),
+      switchMap(({citiesInBBox, citiesToQuery,}) =>{ 
         if (citiesToQuery.length === 0) {
-          return of(deleteCities(newCities));
+          return of(deleteCities(citiesInBBox));
         }
-      return forkJoin(citiesToQuery.map(city => weatherQuery(city).then( response => ({...city, ...response}) ) ) ).pipe(
+        else return forkJoin(citiesToQuery.map(city => weatherQuery(city).then( response => ({...city, ...response}) ) ) ).pipe(
 
-        map((response) => ({cities: parseWeatherData(response), newCities: newCities})),
-        map(({cities, newCities}) => fetchDataSuccess( {newCities, cities})),  
+        map((response) => ({citiesInBBox, cities: parseWeatherData(response)})),
+        map(({citiesInBBox,cities}) => fetchDataSuccess( {citiesInBBox, cities})),  
         catchError((error) => {
           console.error("Weather API Error:", error);
           return fetchWeatherError(error);
@@ -76,22 +76,10 @@ const fetchDataEpic = (action$, state$) =>
     )),
   );
 
-const getUserLocation = () => new Promise((resolve) => navigator.geolocation.getCurrentPosition(resolve))
 
-const setUserLocationEpic = (action$) =>
-    action$.pipe(
-        ofType(setUserLocationRequest.type),
-        switchMap(() => 
-            from(getUserLocation()).pipe(
-                map(location => {
-                  return setUserLocation(location);
-                })
-            )
-        )
-    );
 
   
  
 
 
-export const mapEpics = combineEpics(setIsLoadingEpic,fetchDataEpic, setUserLocationEpic, createRegularActionEpic, startTimerEpic);
+export const mapEpics = combineEpics(setIsLoadingEpic,fetchDataEpic, createRegularActionEpic, startTimerEpic);

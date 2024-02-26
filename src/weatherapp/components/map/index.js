@@ -1,13 +1,16 @@
 import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useDispatch } from "react-redux";
-import { updateBBox, fetchDataRequest, setUserLocation, setUserLocationRequest, setIsLoadingRequest } from "../../logic/reducer";
+import { updateBBox, fetchDataRequest, setUserLocation, setIsLoadingRequest } from "../../logic/reducer";
 import { WeatherMarker } from "./components"
 import { useSelector } from "react-redux";
 export { Chart, ChartWrapper, FormComponent  } from "./components"
 
 function MyComponent() {
   const dispatch = useDispatch();
+  
+  const locationIsSet = useSelector(state => state.mapLogic.locationIsSet);
+  
   const mymap = useMap();
   mymap.locate();
   const map = useMapEvents({
@@ -27,17 +30,16 @@ function MyComponent() {
       console.log("Map loaded");
     },
     locationfound: (location) => {
+      if (locationIsSet) return;
       const { _northEast, _southWest } = location.bounds;
       const lat = _northEast.lat+0.1;
       const lng = _northEast.lng+0.1;
       const lat2 = _southWest.lat-0.1;
       const lng2 = _southWest.lng-0.1;
-      console.log("bbox", {lat, lng, lat2, lng2});
-      dispatch(setUserLocation(location));
+      
       dispatch(setIsLoadingRequest(true));
-
+      dispatch(setUserLocation({lat: location.latlng.lat, lng: location.latlng.lng}));
       dispatch( updateBBox({lat, lng, lat2, lng2}) );
-      console.log("Location found", location);
       dispatch( fetchDataRequest() );
     }
   });

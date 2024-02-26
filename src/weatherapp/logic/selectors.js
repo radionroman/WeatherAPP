@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { BBOX } from "./const";
 import { MAP_LOGIC_REDUCER_NAME } from "./reducer";
 
 export const selectMapState = (state) => state[MAP_LOGIC_REDUCER_NAME];

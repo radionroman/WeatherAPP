@@ -1,15 +1,16 @@
-import { Map, Chart, MapWrapper, darkTheme, lightTheme, ChartWrapper, FormComponent} from "./components";
+import { Map, Chart, MapWrapper, ChartWrapper, FormComponent} from "./components";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleMode } from "./logic/reducer";
 import { modeSelector, isLoadingSelector} from "./logic/selectors";
 import styled, { ThemeProvider } from "styled-components";
 import {  Oval } from 'react-loader-spinner';
 
-const Container = styled.div`
+const MapChartContainer = styled.div`
   display: flex;
   justify-content: space-between;
   text-align: center;
-  height: 80vh;
+  height: 70vh;
+  margin-bottom: 20px;
 `;
 
 const TopRightAudioContainer = styled.div`
@@ -19,13 +20,37 @@ const TopRightAudioContainer = styled.div`
   z-index: 999; 
 `;
 
+const FormContainer = styled.div`
+
+
+  align-items: center;
+  padding: 20px;
+  border: 1px solid ${({theme}) => (theme.colors.border)};
+  border-radius: 10px;
+  width: 95%;
+  height: 7vh;
+  
+`;
+
+
+const UpperBarContainer = styled.div`
+
+  display: flex;
+  height: 10vh;
+  margin: 0 auto;
+
+`;
+
+
+
 export const WeatherApp = () => {
   const darkMode = useSelector(modeSelector);
   const isLoading = useSelector(isLoadingSelector);
   const dispatch = useDispatch();
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+    <div>
+      <UpperBarContainer>
       <h1>Weather App</h1>
       {isLoading && (
         <TopRightAudioContainer>
@@ -38,11 +63,13 @@ export const WeatherApp = () => {
           />
         </TopRightAudioContainer>
       )}
+      </UpperBarContainer>
       <button onClick={() => dispatch(toggleMode())}>
         {darkMode ? "Light mode" : "Dark mode"}
       </button>
 
-      <Container>
+      <MapChartContainer>
+
         <MapWrapper>
           <Map />
         </MapWrapper>
@@ -50,8 +77,12 @@ export const WeatherApp = () => {
         <ChartWrapper>
           <Chart />
         </ChartWrapper>
-      </Container>
-      <FormComponent />
-    </ThemeProvider>
+
+      </MapChartContainer>
+
+      <FormContainer>
+       <FormComponent />
+            </FormContainer>
+    </div>
   );
 };

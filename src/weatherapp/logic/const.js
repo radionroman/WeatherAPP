@@ -9,16 +9,13 @@ export const BBOX = {
   },
 };
 
-export const CITIES = [{
-  
-  type: "node",
-  id: 240109189,
-  lat: 51.5073219,
-  lon: -0.1276474,
-  name: "London",
-  place: "city",
-  population: "8173941",
 
-}];
+export const WEATHER = [];
 
-export const WEATHER = []
+export const FILTERS = {
+  min_population: 0,
+  max_population: 200000000,
+  name: "",
+};
+
+export const USERLOCATION = [51.509865, -0.118092];

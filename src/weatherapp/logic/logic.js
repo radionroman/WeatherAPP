@@ -10,6 +10,18 @@ const api = axios.create({
     }
   });
 
+  export const adjustCoordinates = (longitude) => {
+    while (longitude > 180) {
+  
+        longitude -= 360;
+    }
+    while (longitude < -180) {
+  
+        longitude += 360;
+    }
+    return longitude;
+  }
+
   export const overpassQuery = (bbox) => {
     const overpassQuery = `
         [out:json];
@@ -23,6 +35,7 @@ const api = axios.create({
       return api.post('/api/interpreter',`${overpassQuery}`)
 }
 
+
 export const weatherQuery = (city) => {
     const url = `http://api.weatherapi.com/v1/current.json?key=${apikey}&q=${city.lat},${city.lon}&aqi=no`;
     return axios.get(url).then((response) => {
@@ -31,12 +44,14 @@ export const weatherQuery = (city) => {
     });
 }
 
-export const parseOverpassData = (response) => {
 
-    const { elements } = response.data;
-    console.log("Elements", elements);
-    return elements.map((element) => {
-        const { tags, lat, lon } = element;
+export const parseOverpassData = (response) => {
+    console.log(response);
+
+    const citiesInBBox = response.data.elements;
+
+    return citiesInBBox.map((city) => {
+        const { tags, lat, lon } = city;
         return {
             name:  tags.name || "Unknown",
             population: parseInt(tags.population, 10) || 0, // Convert to integer, default to 0 if conversion fails
@@ -48,7 +63,6 @@ export const parseOverpassData = (response) => {
 
 export const applyFilters = (cities, filters) => {
     cities.sort((a, b) => b.population - a.population);
-    console.log("FIlters", filters);
     if (filters.name !== "" && filters.name !== undefined) {
         cities = cities.filter((city) => city.name.toLowerCase().includes(filters.name.toLowerCase()));
     }
@@ -68,9 +82,8 @@ export const combineCities = (newCities, oldCities) => {
 }
 
 export const parseWeatherData = (response) => {
-    console.log("Response", response);
-    return response.map((element) => {
-        const { data } = element;
+    return response.map((city) => {
+        const { data } = city;
         const { location, current } = data;
         const { lat, lon } = location;
         const { temp_c, precip_mm, pressure_mb, condition } = current;
@@ -90,7 +103,7 @@ export const parseWeatherData = (response) => {
             type = "GOOD";
         }
         return {
-            name: element.name,
+            name: city.name,
             lat,
             lon,
             temp_c,
