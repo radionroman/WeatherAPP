@@ -43,7 +43,7 @@ export const FormComponent = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Form Data:
+        Filter by name:
         <input
           type="text"
           onChange={handleInputChange}
@@ -51,7 +51,7 @@ export const FormComponent = () => {
       </label>
       <div>
         <div>
-          Current Range: {populationRange[0]} - {populationRange[1]}
+          Population Range: {populationRange[0]} - {populationRange[1]}
         </div>
         <RangeSlider
           min={0}
