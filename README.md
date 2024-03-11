@@ -27,12 +27,17 @@ Follow these steps to set up the Weather App locally:
    npm install
    ```
 
-3. **Run the Application**: Start the development server and launch the app in your default browser.
+3. **Set up API Key**: Create a `.env` file in the project folder and add your Weather API key as follows:
+   ```
+   REACT_APP_WEATHER_API_KEY=your-api-key
+   ```
+
+4. **Run the Application**: Start the development server and launch the app in your default browser.
    ```
    npm start
    ```
 
-4. **Explore and Contribute**: Feel free to explore the codebase, experiment with features, and contribute to the project. If you encounter any issues or have suggestions, please submit them through the repository's issue tracker.
+5. **Explore and Contribute**: Feel free to explore the codebase, experiment with features, and contribute to the project. If you encounter any issues or have suggestions, please submit them through the repository's issue tracker.
 
 ## Dependencies
 
